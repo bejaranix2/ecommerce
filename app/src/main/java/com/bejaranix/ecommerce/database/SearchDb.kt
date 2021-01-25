@@ -3,7 +3,7 @@ package com.bejaranix.ecommerce.database
 import androidx.room.*
 
 
-@Entity
+@Entity(indices = [Index(value = ["q"], unique = true)])
 data class Search(
         @ColumnInfo(name = "q") val search: String
 ){
@@ -21,7 +21,7 @@ interface SearchDao {
     @Query("SELECT * FROM search WHERE q = :search ")
     fun findByName(search: String): List<Search>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(vararg users: Search)
 
     @Delete

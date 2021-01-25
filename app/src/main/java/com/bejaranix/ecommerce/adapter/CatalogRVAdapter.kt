@@ -27,7 +27,7 @@ class CatalogRVAdapter(
     override fun onBindViewHolder(holder: CatalogViewHolder, position: Int) {
         val catalogItem = mItems[position]
         holder.viewHolder.titleItem.text = catalogItem.title
-        holder.viewHolder.priceItem.text = String.format("%.2f",catalogItem.price.toFloat())
+        holder.viewHolder.priceItem.text = String.format("$%.2f",catalogItem.price.toFloat())
         holder.viewHolder.imageItem.loadImage(catalogItem.image,getProgressDrawable(holder.viewHolder.root.context))
     }
 

@@ -2,7 +2,6 @@ package com.bejaranix.ecommerce.view
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.database.MatrixCursor
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,16 +30,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CatalogListFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CatalogListFragment : Fragment() {
 
     private val service = CatalogService()
     private val disposable = CompositeDisposable()
-    private lateinit var recycleView: RecyclerView;
+    private lateinit var recycleView: RecyclerView
     private lateinit var binding:FragmentCatalogListBinding
     private lateinit var adapter:CatalogRVAdapter
     private lateinit var searchView: SearchView
@@ -50,14 +43,10 @@ class CatalogListFragment : Fragment() {
     private lateinit var progressBar:ProgressBar
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         adapter = CatalogRVAdapter(inflater)
         binding = FragmentCatalogListBinding.inflate(inflater, container, false)
@@ -112,17 +101,19 @@ class CatalogListFragment : Fragment() {
     private fun setButtonListener(){
         button.setOnClickListener {
             val builder =  AlertDialog.Builder(context)
-            builder.setTitle("Choose from the history")
+            builder.setTitle("Choose from the Search History")
+            builder.setCancelable(false)
+            builder.setNegativeButton("Cancel"){ _: DialogInterface, _: Int -> }
             CoroutineScope(Dispatchers.Main).launch {
                 var values: Array<String>? = null
                 withContext(Dispatchers.IO) {
                     values = db.searchDao().getAll().map { it.search }.toTypedArray()
                 }
                 values?.let {
-                    builder.setItems(it) { dialog, which ->
+                    builder.setItems(it) { _, which ->
                         searchView.setQuery(it[which], true)
                     }
-                    val dialog = builder.create();
+                    val dialog = builder.create()
                     dialog.show()
                 }
             }
