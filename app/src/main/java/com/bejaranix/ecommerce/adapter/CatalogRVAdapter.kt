@@ -14,7 +14,7 @@ class CatalogRVAdapter(
     : RecyclerView.Adapter<CatalogRVAdapter.CatalogViewHolder>() {
 
 
-    public fun updateValues(mItems: ArrayList<CatalogItem>){
+    fun updateValues(mItems: ArrayList<CatalogItem>){
         this.mItems = mItems
         notifyDataSetChanged()
     }
