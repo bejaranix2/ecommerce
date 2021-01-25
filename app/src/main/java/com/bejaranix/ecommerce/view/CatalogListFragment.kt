@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -87,6 +88,7 @@ class CatalogListFragment : Fragment() {
                         db.searchDao().insertAll(Search(it))
                     }
                 }
+                searchView.clearFocus();
                 progressBar.isVisible = true
                 return true
             }
@@ -132,11 +134,15 @@ class CatalogListFragment : Fragment() {
                             override fun onSuccess(t: CatalogModel) {
                                 adapter.updateValues(convertToCatalogItem(t))
                                 progressBar.isVisible = false
+                                if(t.items.isEmpty()) {
+                                    Toast.makeText(context, "No results found", Toast.LENGTH_LONG)
+                                        .show()
+                                }
                             }
 
                             override fun onError(e: Throwable) {
                                 progressBar.isVisible = false
-
+                                Toast.makeText(context,"Something went wrong. Check your Internet Conection",Toast.LENGTH_LONG).show()
                             }
                         }
                         ))
